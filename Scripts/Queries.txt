@@ -1,0 +1,8 @@
+# Creating triggers to update the student answers
+
+CREATE TRIGGER student_update
+    AFTER UPDATE ON Student_Answer
+    WHEN is_submitted == TRUE
+BEGIN
+    # insert the value into the Student_Answer table based on the question_id
+END;

@@ -1,0 +1,23 @@
+CREATE TABLE Student (
+    student_id INTEGER PRIMARY KEY,
+    first_name text NOT NULL, 
+    last_name text NOT NULL, 
+    seat_group_no INTEGER NOT NULL, 
+    num_answered INTEGER, 
+    num_correct INTEGER, 
+    is_submitted FALSE;
+);
+
+CREATE TABLE Question ( 
+    question_id INTEGER PRIMARY KEY, 
+    correct_answer text NOT NULL
+);
+
+CREATE TABLE Student_Answer (
+    question_id INTEGER, 
+    student_id INTEGER, 
+    student_answer text
+    FOREIGN KEY (question_id) REFERENCES Question(question_id),
+    FOREIGN KEY (student_id) REFERENCES Student(student_id)
+);
+

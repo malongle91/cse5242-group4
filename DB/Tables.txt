@@ -5,19 +5,19 @@ CREATE TABLE Student (
     seat_group_no INTEGER NOT NULL, 
     num_answered INTEGER, 
     num_correct INTEGER, 
-    is_submitted FALSE;
+    is_submitted FALSE
 );
 
 CREATE TABLE Question ( 
     question_id INTEGER PRIMARY KEY, 
-    correct_answer text NOT NULL
+    correct_answer CHAR NOT NULL
 );
 
 CREATE TABLE Student_Answer (
     question_id INTEGER, 
     student_id INTEGER, 
-    student_answer text
-    FOREIGN KEY (question_id) REFERENCES Question(question_id),
-    FOREIGN KEY (student_id) REFERENCES Student(student_id)
+    student_answer CHAR,
+    FOREIGN KEY(question_id) REFERENCES Question(question_id),
+    FOREIGN KEY(student_id) REFERENCES Student(student_id)
 );
 

@@ -21,3 +21,11 @@ CREATE TABLE Student_Answer (
     FOREIGN KEY(student_id) REFERENCES Student(student_id)
 );
 
+CREATE TABLE Hotspot (
+    seat_group_no INTEGER NOT NULL,
+    student_id INTEGER NOT NULL,
+    incorrect_answer CHAR NOT NULL,
+    PRIMARY KEY(seat_group_no, student_id),
+    FOREIGN KEY(seat_group_no) REFERENCES Student(seat_group_no),
+    FOREIGN KEY(student_id) REFERENCES Student(student_id)
+);

@@ -1,0 +1,9 @@
+{
+    "student_id": 6,
+    "first_name": "John",
+    "last_name": "Smith",
+    "seat_group_no": 3,
+    "num_answered": 0,
+    "num_correct": 0,
+    "is_submitted": false
+}

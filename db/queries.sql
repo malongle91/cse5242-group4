@@ -1,10 +1,10 @@
-# Creating triggers to updating their score, figuring out how many questions they have gotten right 
+-- Creating triggers to updating their score, figuring out how many questions they have gotten right 
 
 CREATE TRIGGER student_update
     AFTER INSERT ON Student_Answer
-    # WHEN student_answer == 'X'
+    -- WHEN student_answer == 'X'
 BEGIN
-    # insert the value into the Student_Answer table based on the question_id
+    -- insert the value into the Student_Answer table based on the question_id
     SELECT NEW.student_id
         CASE 
             WHEN NEW.student_answer == (
@@ -15,7 +15,7 @@ BEGIN
         END;
 END;
 
-# testinog which one is better
+-- testinog which one is better
 CREATE TRIGGER student_update
     AFTER INSERT ON Student_Answer
     WHEN NEW.student_answer == (
@@ -24,7 +24,7 @@ CREATE TRIGGER student_update
                 WHERE Q.question_id = S.question_id) THEN
                 Select NEW.student_id
 BEGIN
-    # insert the value into the Student_Answer table based on the question_id
+    -- insert the value into the Student_Answer table based on the question_id
     UPDATE Student
     SET num_correct = num_correct + 1
     

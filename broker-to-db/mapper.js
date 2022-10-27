@@ -13,7 +13,7 @@ const sqlite3 = require("sqlite3");
 
 // List of columns that go into the student and answer queries.
 const STUDENT_FIELDS = ["student_id", "first_name", "last_name", "seat_group_no"];
-const ANSWER_FIELDS = ["question_id, student_id, student_answer"];
+const ANSWER_FIELDS = ["question_id", "student_id", "student_answer"];
 
 // SQL for inserting info for a student taking the quiz.
 const STUDENT_QUERY = `INSERT INTO Student(${STUDENT_FIELDS.toString()})` +
@@ -33,7 +33,7 @@ const TOPIC_PATH = "/queue/quiz_results";
 
 // Connect to the SQLite databse.
 const db = new sqlite3.Database(DB_PATH, sqlite3.OPEN_READWRITE, (err) => {
-    if (err) {console.err(err.message); return; }
+    if (err) {console.error(err.message); return; }
     console.log('Connected to SQLite db.');
 });
 
@@ -56,7 +56,7 @@ stompClient.connect((sessionId) => {
         // Check that the JSON has every field required before running a query.
         fieldsToCheck.forEach((field) => {
             if (!(field in bodyParsed)) {
-                console.err(`Missing field ${field} in JSON Payload. Insertion denied.`);
+                console.error(`Missing field ${field} in JSON Payload. Insertion denied.`);
                 return;
             };
         });

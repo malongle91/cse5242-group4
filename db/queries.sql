@@ -26,7 +26,8 @@ CREATE TRIGGER student_update
 BEGIN
     -- insert the value into the Student_Answer table based on the question_id
     UPDATE Student
-    SET num_correct = num_correct + 1       
+    SET num_correct = num_correct + 1 
+    -- WHERE NEW.student_answer = correct_answer   
     -- increment correct num
     
 END;

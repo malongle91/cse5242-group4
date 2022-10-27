@@ -24,9 +24,11 @@ CREATE TABLE IF NOT EXISTS Student_Answer (
 
 CREATE TABLE IF NOT EXISTS Hotspot (
     seat_group_no INTEGER NOT NULL,
+    question_id INTEGER NOT NULL,
     student_id text NOT NULL,
     incorrect_answer CHAR NOT NULL CHECK (incorrect_answer IN ('A', 'B', 'C', 'D')),
-    PRIMARY KEY(seat_group_no, student_id),
+    PRIMARY KEY(seat_group_no, question_id, student_id),
     FOREIGN KEY(seat_group_no) REFERENCES Student(seat_group_no),
+    FOREIGN KEY (question_id) REFERENCES Question(question_id),
     FOREIGN KEY(student_id) REFERENCES Student(student_id)
 );

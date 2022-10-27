@@ -15,7 +15,7 @@ BEGIN
         END;
 END;
 
--- testinog which one is better
+-- testing which one is better
 CREATE TRIGGER student_update
     AFTER INSERT ON Student_Answer
     WHEN NEW.student_answer == (
@@ -26,6 +26,25 @@ CREATE TRIGGER student_update
 BEGIN
     -- insert the value into the Student_Answer table based on the question_id
     UPDATE Student
-    SET num_correct = num_correct + 1
+    SET num_correct = num_correct + 1       
+    -- increment correct num
     
+END;
+
+-- create trigger hotspot
+CREATE TRIGGER hotspot
+    AFTER INSERT ON Student_Answer
+BEGIN
+
+    -- query on the group no and question 
+    SELECT NEW.question_id
+    FROM (
+        SELECT question_id
+        FROM Question
+        WHERE 
+
+    -- Get the question, find the question in the question table and get the answer.
+    -- check to see if the student got the answer correct. 
+    -- if wrong check if anyone in that group_no got the same answer as them 
+
 END;

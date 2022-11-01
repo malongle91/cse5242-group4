@@ -1,19 +1,16 @@
-const sqlite3 = require("sqlite3");
+async function getStudentIds() {
+    const response = await fetch('http://127.0.0.1:3000/student_ids'); //, { mode: 'no-cors' });
+    const responseJson = await response.json();
+    return 'student_ids' in responseJson ? responseJson.student_ids : [];
+}
 
-const HOTSPOT_QUERY = '';
-
-const CORRECT_PERCENTAGE_QUERY = '';
-
-const db = new sqlite3.Database(DB_PATH, sqlite3.OPEN_READONLY, (err) => {
-    if (err) { console.error(err.message); return; }
-    console.log("Connected to SQLite db.");
-});
-
-const optionsByFilter = {
-    student: ["Bob", "Jane", "Aaron"],
+var optionsByFilter = {
+    // student: ["Bob", "Jane", "Aaron"],
     question: [1, 2, 3, 4, 5],
     seat_group: ["Teacher's Pets", "Kids in the Back", "Quiet Kids"]
 }
+
+getStudentIds().then((result) => {optionsByFilter.student_id = result;});
 
 function changeFilter(value) {
     const filterByElement = document.getElementById("filter_by");

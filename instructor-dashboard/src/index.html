@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Instructor Dashboard</title>
+    <script src="index.js"></script>
+</head>
+<body>
+    <label for="correct_percentage_filters">
+        Correct answer percentage by:
+    <label>
+    <select name="correct_percentage_filters" id="correct_percentage_filters"
+            onchange="changeFilter(this.value)">
+        <option value="" disabled selected>Select filter</option>
+        <option value="total">The Whole Class</option>
+        <option value="student_id">Student Id</option>
+        <option value="question">Question</option>
+        <option value="seat_group">Seating Group</option>
+    </select>
+    <select name="filter_by" id="filter_by" hidden>
+    </select>
+    <br />
+    <h2>Hotspots Detected:</h2>
+    <ul>
+    </ul>
+</body>
+</html>

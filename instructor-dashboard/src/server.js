@@ -22,6 +22,15 @@ STUDENT_PERCENTAGE_SQL = `select student_id,
 
 STUDENT_IDS_SQL = `select student_id from Student;`
 
+STUDENT_NAME_SQL = `select first_name from Student;`
+
+QUESTION_IDS_SQL = `select question_id from Question;`
+
+// want to select student based on the student group number and print out all the students that are in that group
+GROUP_STUDENT_SQL = `select student_id from Student s1, Student s2
+                     where s1.seat_group_no = s2.seat_group_no    
+                     and s1.student_id != s2.student_id;`
+
 const db = new sqlite3.Database(DB_PATH, sqlite3.OPEN_READONLY, (err) => {
     if (err) { console.error(err.message); return; }
     console.log('Connected to SQLite db.');
@@ -33,10 +42,11 @@ const db = new sqlite3.Database(DB_PATH, sqlite3.OPEN_READONLY, (err) => {
 app.get('/student_ids', (req, res) => {
     res.set(LOCAL_OPTIONS);
 
+    // json file
     db.all(STUDENT_IDS_SQL, [], (err, rows) => {
         if (err) { return console.error(err.message); }
 
-        const response = { student_ids: rows.map((x) => { return x.student_id }) }
+        const response = { student_ids: rows.map((x) => { return x.student_id }) }  //mapping that array to get only the student ids
         res.json(response);
     });
 });
@@ -44,6 +54,7 @@ app.get('/student_ids', (req, res) => {
 app.get('/student_percentage', (req, res) => {
     res.set(LOCAL_OPTIONS);
 
+    // line below in the second parameter corresponds with the ?
     db.get(STUDENT_PERCENTAGE_SQL, [req.query.student_id], (err, row) => {
         if (err) { return console.error(err.message); }
 
@@ -51,6 +62,33 @@ app.get('/student_percentage', (req, res) => {
         res.json(response);
     });
 });
+
+// printing the question ids
+app.get('/question_ids', (req, res) => {
+    res.set(LOCAL_OPTIONS);
+
+    db.all(QUESTION_IDS_SQL, [], (err, rows) => {
+        if (err) { return console.error(err.message); }
+
+        const response = { question_ids: rows.map((x) => { return x.question_id }) }  //mapping that array to get only the student ids
+        res.json(response);
+    });
+
+});
+
+//print all the student groups
+app.get('/student_groups', (req, res) => {
+    res.set(LOCAL_OPTIONS);
+
+    db.get(GROUP_STUDENT_SQL, [req.query.student_id], (err, row) => {
+        if (err) { return console.error(err.message); }
+
+        const response = row;
+        res.json(response);
+    });
+});
+
+//end point for student group correct answer percentage
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

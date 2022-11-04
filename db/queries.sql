@@ -43,7 +43,7 @@ BEGIN
         SELECT question_id
         FROM Question
         WHERE 
-
+    
     -- Get the question, find the question in the question table and get the answer.
     -- check to see if the student got the answer correct. 
     -- if wrong check if anyone in that group_no got the same answer as them 

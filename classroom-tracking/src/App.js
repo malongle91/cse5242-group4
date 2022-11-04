@@ -1,27 +1,13 @@
 import React, { useState } from "react";
 import "./App.css";
+import SockJsClient from "react-stomp";
+
 
 function App() {
 
-// const Stomp = require("stomp-client");
-
-// const stompClient = new Stomp("127.0.0.1", 61613);
-
-// stompClient.connect(function () {
-//     console.log("Producer connected.");
-
-//     const notification = {
-//         label: "You have a new notification!",
-//         name: "Bob Dylan",
-//     };
-
-//     const notificationJSON = JSON.stringify(notification);
-
-//     stompClient.publish("/queue/notifications", notificationJSON);
-
-//     stompClient.disconnect();
-// });
+  
   // Properties
+  
   const [showResults, setShowResults] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
@@ -32,6 +18,25 @@ function App() {
     studentID: '',
     seatGroup: ''
   });
+
+  const [ clientRef, setClientRef] = useState({})
+
+  const sendMessage = () => {
+    try {
+      console.log(clientRef)
+      clientRef.sendMessage("/somethingRandom", JSON.stringify("selfMsg"));
+      return true;
+    } catch(e) {
+      console.log("not connected")
+      return false;
+    }
+  }
+
+  const onMessageReceive = (msg, topic) => {
+    this.setState(prevState => ({
+      messages: [...prevState.messages, msg]
+    }));
+  }
 
   const questions = [
     {
@@ -114,6 +119,11 @@ function App() {
 
   return (
     <div className="App">
+      <SockJsClient url={ "http://localhost:61613" } topics={["/topics/somethingRandom"]} 
+          onMessage={ onMessageReceive } ref={ (client) => { setClientRef(client) }}
+          onConnect={ () => { this.setState({ clientConnected: true }) } }
+          onDisconnect={ () => { this.setState({ clientConnected: false }) } }
+          debug={ false }/>
 
       { startQuiz ? ( 
         <div className="form">
@@ -128,8 +138,9 @@ function App() {
             <label for="seatGroup">Seat group:</label>
             <input type="text" id="seatGroup" name="seatGroup" onChange={handleChange}/>
             <br/>
-            <button onClick={()=>{setStartQuiz(false)}}>Submit</button>
+            <button onClick={()=>{setStartQuiz(false); sendMessage(); console.log("message sent");}}>Submit</button>
           </form>
+          
           {console.log(userProperties.fname)}
         </div>
         

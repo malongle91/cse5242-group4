@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "cors": "^2.8.5",
-    "prop-types": "^15.8.1",
-    "react-stomp": "^5.1.0"
-  }
-}

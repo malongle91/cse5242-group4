@@ -26,6 +26,16 @@ STUDENT_NAME_SQL = `select first_name from Student;`
 
 QUESTION_IDS_SQL = `select question_id from Question;`
 
+QUESTION_PERFORMANCE_SQL = `select question_id, student_id
+                        from Student_Answer, Question
+                        where Question.correct_answer = Student_Answer.student_answer;`
+                        
+                        // `select question_id from Question
+                        // union
+                        // select student_id from Student_Answer
+                        // where correct_answer = student_answer
+                        // `
+
 // want to select student based on the student group number and print out all the students that are in that group
 GROUP_STUDENT_SQL = `select student_id from Student s1, Student s2
                      where s1.seat_group_no = s2.seat_group_no    
@@ -89,6 +99,19 @@ app.get('/student_groups', (req, res) => {
 });
 
 //end point for student group correct answer percentage
+
+//end point to show which students got certain questions right
+app.get('/question_performance', (req, res) => {
+    res.set(LOCAL_OPTIONS);
+
+    // line below in the second parameter corresponds with the ?
+    db.get(QUESTION_PERFORMANCE_SQL, [req.query.question_id], (err, row) => {
+        if (err) { return console.error(err.message); }
+
+        const response = row;
+        res.json(response);
+    });
+});
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

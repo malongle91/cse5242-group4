@@ -17,10 +17,11 @@
         <option value="question">Question</option>
         <option value="seat_group">Seating Group</option>
     </select>
-    <select name="filter_by" id="filter_by" hidden>
+    <select name="filter_by" id="filter_by" hidden
+            onchange="getOption(this.value)">
     </select>
     <br />
-    <h2>Hotspots Detected:</h2>
+    <h2>Student Performance:</h2>
     <table border="1">
         <tbody  name="whole_class" id="whole_class">
 

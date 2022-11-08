@@ -106,9 +106,22 @@ function changeFilter(value) {
         filterWholeClass.innerHTML ="";
         const options = optionsByFilter[value];
         for (var optionId in options) {
-            optionsHTML += `<option>${options[optionId]}</option>`;
+            optionsHTML += `<option value="${optionId}">${options[optionId]}</option>`;
         }
         filterByElement.innerHTML = optionsHTML;
         filterByElement.hidden = false;
+        // var value = document.getElementById(optionId).value;
+        // console.log(value);
+        
+        // if(optionId )
     }
+}
+
+function getOption(value){
+    selectElement = document.querySelector('#filter_by');
+    output = selectElement.value;
+    console.log(output);
+
+    
+
 }

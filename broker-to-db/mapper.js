@@ -13,7 +13,7 @@ const sqlite3 = require("sqlite3");
 
 // List of columns that go into the student and answer queries.
 const STUDENT_FIELDS = ["student_id", "first_name", "last_name", "seat_group_no"];
-const ANSWER_FIELDS = ["question_id", "student_id", "student_answer"];
+const ANSWER_FIELDS = ["question_id", "student_id", "student_answer", "answer_time"];
 
 // SQL for inserting info for a student taking the quiz.
 const STUDENT_QUERY = `INSERT INTO Student(${STUDENT_FIELDS.toString()})` +

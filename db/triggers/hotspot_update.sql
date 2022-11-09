@@ -18,6 +18,7 @@ CREATE TRIGGER hotspot_update
                  WHERE sa.question_id = new.question_id
                    AND sa.student_answer = new.student_answer
                    AND s.seat_group_no = target_group.no
+                   AND (new.answer_time - sa.answer_time) < 30
              )
 BEGIN
     -- Insert into Hotspot the names of the students in the same group who have the
@@ -31,7 +32,7 @@ BEGIN
       AND s.seat_group_no = target_group.no;
 
     -- Include the student who triggered the hotspot.
-    INSERT INTO Hotspot (seat_group_no, question_id, student_id, incorrect_answer)
+    INSERT INTO Hotspot (seat_group_no, question_id, student_id, incorrect_answer, hotspot_time)
     VALUES ((SELECT seat_group_no AS no FROM Student WHERE student_id = new.student_id), new.question_id,
-            new.student_id, new.student_answer);
+            new.student_id, new.student_answer, datetime(new.answer_time, 'unixepoch'));
 end;

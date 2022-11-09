@@ -2,7 +2,7 @@
  * Trigger to update the student's correct and total answered count
  * upon answering a new question.
  */
-CREATE TRIGGER student_num_correct_update
+CREATE TRIGGER student_correctness_update
     AFTER INSERT ON Student_Answer
 BEGIN
     UPDATE Student

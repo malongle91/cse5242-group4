@@ -1,9 +1,32 @@
-1, dylan.1, A
-1, simon.9, C
-1, cobain.1, C
-2, dylan.1, B
-2, cobain.1, B
-3, simon.9, D
-4, simon.9, C
-5, simon.9, A
-
+1,loner.1,C,1667966157
+2,loner.1,A,1667966215
+3,loner.1,C,1667966227
+4,loner.1,C,1667966241
+5,loner.1,C,1667966260
+6,loner.1,C,1667966271
+1,clinton.1,C,20
+1,clinton.2,C,55
+2,clinton.1,C,20
+2,clinton.2,C,25
+3,clinton.1,A,20
+3,clinton.2,B,25
+4,clinton.1,A,20
+4,clinton.2,B,25
+5,clinton.1,A,20
+5,clinton.2,A,55
+6,clinton.1,A,20
+6,clinton.2,A,25
+7,clinton.1,A,20
+7,loner.1,A,25
+1,dylan.1,A,20
+1,simon.2,A,25
+1,garfunkel.3,B,30
+2,dylan.1,A,20
+2,simon.2,A,25
+2,garfunkel.3,A,30
+3,dylan.1,A,20
+3,simon.2,A,25
+3,garfunkel.3,A,60
+4,dylan.1,A,20
+4,simon.2,A,25
+4,garfunkel.3,B,30

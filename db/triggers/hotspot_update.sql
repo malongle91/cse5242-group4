@@ -23,8 +23,8 @@ CREATE TRIGGER hotspot_update
 BEGIN
     -- Insert into Hotspot the names of the students in the same group who have the
     -- same wrong answer to the given question.
-    INSERT OR IGNORE INTO Hotspot (seat_group_no, question_id, student_id, incorrect_answer)
-    SELECT no, new.question_id, student_id, new.student_answer
+    INSERT OR IGNORE INTO Hotspot (seat_group_no, question_id, student_id, incorrect_answer, hotspot_time)
+    SELECT no, new.question_id, student_id, new.student_answer, datetime(new.answer_time, 'unixepoch')
     FROM (SELECT seat_group_no AS no FROM Student WHERE student_id = new.student_id) AS target_group,
          (Student s NATURAL JOIN Student_Answer sa)
     WHERE sa.question_id = new.question_id

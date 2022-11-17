@@ -1,0 +1,48 @@
+{
+  "name": "stomp-messaging",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "file1": "cd src && node producer_barrett.js",
+    "file2": "cd src && node producer_brunson.js",
+    "file3": "cd src && node producer_randle.js",
+    "file4": "cd src && node producer_reddish.js",
+    "file5": "cd src && node producer_robinson.js",
+    "file6": "cd src && node producer_quickley.js",
+    "file7": "cd src && node producer_james.js",
+    "file8": "cd src && node producer_sims.js",
+    "file9": "cd src && node producer_russell.js",
+    "file10": "cd src && node producer_branham.js",
+    "file11": "cd src && node producer_banchero.js",
+    "file12": "cd src && node producer_grimes.js",
+    "file13": "cd src && node producer_vanderbilt.js",
+    "file14": "cd src && node producer_gay.js",
+    "file15": "cd src && node producer_olynyk.js",
+    "file16": "cd src && node producer_clarkson.js",
+    "file17": "cd src && node producer_harden.js",
+    "file18": "cd src && node producer_green.js",
+    "file19": "cd src && node producer_curry.js",
+    "file20": "cd src && node producer_thompson.js",
+    "file21": "cd src && node producer_wiggins.js",
+    "file22": "cd src && node producer_poole.js",
+    "file23": "cd src && node producer_tatum.js",
+    "file24": "cd src && node producer_brown.js",
+    "file25": "cd src && node producer_horford.js",
+    "file26": "cd src && node producer_smart.js",
+    "file27": "cd src && node producer_griffin.js",
+    "file28": "cd src && node producer_lowry.js",
+    "file29": "cd src && node producer_herro.js",
+    "file30": "cd src && node producer_butler.js",
+
+    "start_full_app": "concurrently \"npm run file1\" \"npm run file2\" \"npm run file3\" \"npm run file4\" \"npm run file5\" \"npm run file6\" \"npm run file7\" \"npm run file8\" \"npm run file9\" \"npm run file10\" \"npm run file11\" \"npm run file12\" \"npm run file13\" \"npm run file14\" \"npm run file15\" \"npm run file16\" \"npm run file17\" \"npm run file18\" \"npm run file19\" \"npm run file20\" \"npm run file21\" \"npm run file22\" \"npm run file23\" \"npm run file24\" \"npm run file25\" \"npm run file26\" \"npm run file27\" \"npm run file28\" \"npm run file29\" \"npm run file30\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^7.5.0",
+    "stomp-client": "^0.9.0"
+  }
+}

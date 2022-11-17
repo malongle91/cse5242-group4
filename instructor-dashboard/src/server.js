@@ -22,6 +22,9 @@ STUDENT_PERCENTAGE_SQL = `select student_id,
 
 STUDENT_IDS_SQL = `select student_id from Student;`
 
+ALL_STUDENTS_SQL = `select student_id, (IIF(num_answered > 0, CAST(num_correct AS FLOAT) / num_answered, 0)) as correct_percentage,
+num_answered, num_correct,first_name, last_name from Student;`
+
 STUDENT_NAME_SQL = `select first_name from Student;`
 
 QUESTION_IDS_SQL = `select question_id from Question;`
@@ -34,10 +37,11 @@ where (Q.question_id = ?) and (Q.correct_answer = SA.student_answer);`
 // want to select student based on the student group number and print out all the students that are in that group
 GROUP_STUDENT_SQL = `select student_id from Student SA where SA.seat_group_no = ?;`
 
-STUDENT_GROUP_WRONG = `select distinct (SA.student_id)
-from Student_Answer as SA, Question as Q, Student S
-where (S.seat_group_no=?) AND (Q.correct_answer!=SA.student_answer)
-AND SA.student_id = S.student_id;`
+STUDENT_GROUP_SQL = `select distinct(seat_group_no) from Student`;
+
+
+// create a percentage of how many students got a question right 
+
 
 const db = new sqlite3.Database(DB_PATH, sqlite3.OPEN_READONLY, (err) => {
     if (err) { console.error(err.message); return; }
@@ -47,6 +51,19 @@ const db = new sqlite3.Database(DB_PATH, sqlite3.OPEN_READONLY, (err) => {
 /**
  * ENDPOINTS
  */
+
+ app.get('/all_students', (req, res) => {
+    res.set(LOCAL_OPTIONS);
+
+    // json file
+    db.all(ALL_STUDENTS_SQL, [], (err, rows) => {
+        if (err) { return console.error(err.message); }
+
+        const response = rows
+        res.json(response);
+    });
+});
+
 app.get('/student_ids', (req, res) => {
     res.set(LOCAL_OPTIONS);
 
@@ -85,7 +102,7 @@ app.get('/question_ids', (req, res) => {
 });
 
 //print all the student groups
-app.get('/student_groups', (req, res) => {
+app.get('/student_groups_roster', (req, res) => {
     res.set(LOCAL_OPTIONS);
 
     db.all(GROUP_STUDENT_SQL, [req.query.seat_group_no], (err, rows) => {
@@ -112,6 +129,11 @@ app.get('/question_performance', (req, res) => {
 });
 
 //print all the student id who answred wrong based on student group
+STUDENT_GROUP_WRONG = `select distinct (SA.student_id), S.first_name, S.last_name
+from Student_Answer as SA, Question as Q, Student S
+where (S.seat_group_no=?) AND (Q.correct_answer!=SA.student_answer)
+AND SA.student_id = S.student_id;`
+
 app.get('/hotspot', (req, res) => {
     res.set(LOCAL_OPTIONS);
 
@@ -122,6 +144,19 @@ app.get('/hotspot', (req, res) => {
         res.json(response);
     });
 });
+
+app.get('/student_groups', (req, res) => {
+    res.set(LOCAL_OPTIONS);
+
+    db.all(STUDENT_GROUP_SQL, [], (err, rows) => {
+        if (err) { return console.error(err.message); }
+
+        const response = { seat_group_no: rows.map((x) => { return x.seat_group_no }) }  //mapping that array to get only the student ids
+        res.json(response);
+    });
+
+});
+
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

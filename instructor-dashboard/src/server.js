@@ -3,7 +3,7 @@ const https = require('https');
 const { nextTick } = require('process');
 const app = express();
 const sqlite3 = require('sqlite3');
-const port = 3000;
+const port = 3001;
 
 DB_PATH = '../../db/quiz.db';
 

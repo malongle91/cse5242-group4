@@ -1,34 +1,34 @@
 // const { FORMAT } = require("sqlite3");
 
 async function getStudentIds() {
-    const response = await fetch('http://127.0.0.1:3000/student_ids'); //, { mode: 'no-cors' }); // fetching at the api, returns a promise
+    const response = await fetch('http://127.0.0.1:3001/student_ids'); //, { mode: 'no-cors' }); // fetching at the api, returns a promise
     const responseJson = await response.json();                     // extracts the json based on the response
     return 'student_ids' in responseJson ? responseJson.student_ids : [];   // ternary operator, checks for  the reponse and prints out the student_ids else prints an array
 }
 
 // do the above for questions for the filter
 async function getQuestion() {
-    const response = await fetch('http://127.0.0.1:3000/question_ids'); //, { mode: 'no-cors' }); // fetching at the api, returns a promise
+    const response = await fetch('http://127.0.0.1:3001/question_ids'); //, { mode: 'no-cors' }); // fetching at the api, returns a promise
     const responseJson = await response.json();                     // extracts the json based on the response
     return 'question_ids' in responseJson ? responseJson.question_ids : [];   // ternary operator, checks for  the reponse and prints out the student_ids else prints an array
 }
 
 // having all the seat_group_no in the filter
 async function getSeatGroup() {
-    const response = await fetch('http://127.0.0.1:3000/student_groups'); //, { mode: 'no-cors' }); // fetching at the api, returns a promise
+    const response = await fetch('http://127.0.0.1:3001/student_groups'); //, { mode: 'no-cors' }); // fetching at the api, returns a promise
     const responseJson = await response.json();                     // extracts the json based on the response
     return 'seat_group_no' in responseJson ? responseJson.seat_group_no : [];   // ternary operator, checks for  the reponse and prints out the student_ids else prints an array
 }
 
 // printing the students in the class when "Whole Class" is selected
 async function getRoster(){
-    const response = await fetch('http://127.0.0.1:3000/all_students');
+    const response = await fetch('http://127.0.0.1:3001/all_students');
     const responseJson = await response.json();
     return responseJson;
 }
 
 async function getHotSpot(num){
-    var link = 'http://127.0.0.1:3000/hotspot?seat_group_no=';
+    var link = 'http://127.0.0.1:3001/hotspot?seat_group_no=';
     link += num;
     const response = await fetch(link);
     const responseJson = await response.json();

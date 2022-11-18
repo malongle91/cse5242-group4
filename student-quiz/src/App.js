@@ -55,6 +55,7 @@ function App() {
       "seat_group_no": parseInt(document.getElementById("seatGroup").value)
     }
     client.send(TOPIC_PATH, LOCAL_HEADERS, JSON.stringify(message));
+    console.log(`Sending student info start: ${Date.now()} ms`);
   }
 
   const sendStudentAnswer = (msg) => {
@@ -66,6 +67,7 @@ function App() {
     };
     console.log(message);
     client.send(TOPIC_PATH, LOCAL_HEADERS, JSON.stringify(message));
+    console.log(`Sending student answer start: ${Date.now()} ms`);
   }
 
   return (

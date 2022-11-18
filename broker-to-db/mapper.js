@@ -63,6 +63,8 @@ stompClient.connect((sessionId) => {
 
         // If all fields exist, run the insertion query.
         db.run(queryToRun, Object.values(bodyParsed));
+
+        console.log(`DB mapping done at: ${Date.now()} ms`);
     }
 
     stompClient.subscribe(TOPIC_PATH, insertPayloadIntoDB);

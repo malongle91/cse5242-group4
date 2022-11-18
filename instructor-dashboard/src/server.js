@@ -48,6 +48,13 @@ const db = new sqlite3.Database(DB_PATH, sqlite3.OPEN_READONLY, (err) => {
     console.log('Connected to SQLite db.');
 });
 
+app.use((req, res, next) => {
+    res.on('finish', () => {
+        console.log(`Response returned at: ${Date.now()}`);
+    });
+    next();
+});
+
 /**
  * ENDPOINTS
  */

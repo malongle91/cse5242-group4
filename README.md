@@ -31,6 +31,7 @@ The following directories are Node.js projects and need package installations un
 See the `package.json` file under each of these directories for their package dependencies, which include the following but are not limited to:
 + [react](https://reactjs.org/)
 + [stomp-client](https://github.com/easternbloc/node-stomp-client#readme)
++ [stompjs](https://github.com/stomp-js/stompjs)
 + [sqlite3](https://github.com/TryGhost/node-sqlite3)
 
 ## Running the System
@@ -45,8 +46,15 @@ To run the entire system, each of the following components need to be started in
    - Run `node mapper.js` to start the mapper script.
    - The console will issue a message stating whether it has connected successfully both to the local ActiveMQ server and the SQLite database.
 
-3. Student Quiz and Instructor Dashboard
-   - Open a command window under the directory...
+3. Student Quiz Instance
+   - Open a command window under the directory, `student-quiz`.
+   - Run `npm start` to run the React student quiz app.
+   - The console will issue a message stating whether it has connected successfully to the local ActiveMQ server.
+
+4. Instructor Dashboard
+   - Open a command window under the directory, `instructor-dashboard/src`.
+   - Run the API for communicating the the database using `node server.js`.
+   - Open the `index.html` file in your web browser.
 
 
 # Project Structure
@@ -64,3 +72,12 @@ This system is divided into the following components:
 The diagram below summarizes the high-level architecture created by these components:
 
 ![System High-Level Architecture](/images/project-architecture.jpg)
+
+# Testing and Evaluation
+The system is tested for correctness and performance using the following:
+
++ **Database Test Cases** - The `db/test` directory contains some manual test cases that are used to check for
+correct trigger behavior.
+
++ **Capacity Test Script** - Located under `capacity-test` is a Node.js script, `producer_runner.js`, for load testing that
+simulates a specified number of students all connecting to the ActiveMQ broker and taking a quiz.

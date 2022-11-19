@@ -1,5 +1,5 @@
 {
-  "name": "stomp-messaging",
+  "name": "capacity-test",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -35,7 +35,6 @@
     "file28": "cd src && node producer_lowry.js",
     "file29": "cd src && node producer_herro.js",
     "file30": "cd src && node producer_butler.js",
-
     "start_full_app": "concurrently \"npm run file1\" \"npm run file2\" \"npm run file3\" \"npm run file4\" \"npm run file5\" \"npm run file6\" \"npm run file7\" \"npm run file8\" \"npm run file9\" \"npm run file10\" \"npm run file11\" \"npm run file12\" \"npm run file13\" \"npm run file14\" \"npm run file15\" \"npm run file16\" \"npm run file17\" \"npm run file18\" \"npm run file19\" \"npm run file20\" \"npm run file21\" \"npm run file22\" \"npm run file23\" \"npm run file24\" \"npm run file25\" \"npm run file26\" \"npm run file27\" \"npm run file28\" \"npm run file29\" \"npm run file30\""
   },
   "keywords": [],

@@ -3,7 +3,7 @@ const https = require('https');
 const { nextTick } = require('process');
 const app = express();
 const sqlite3 = require('sqlite3');
-const port = 3000;
+const port = 3001;
 
 DB_PATH = '../../db/quiz.db';
 
@@ -29,14 +29,6 @@ STUDENT_NAME_SQL = `select first_name from Student;`
 
 QUESTION_IDS_SQL = `select question_id from Question;`
 
-// return student id who answered correctly given question
-QUESTION_PERFORMANCE_SQL = `select SA.student_id
-from Student_Answer as SA, Question as Q
-where (Q.question_id = ?) and (Q.correct_answer = SA.student_answer);`
-
-// want to select student based on the student group number and print out all the students that are in that group
-GROUP_STUDENT_SQL = `select student_id from Student SA where SA.seat_group_no = ?;`
-
 STUDENT_GROUP_SQL = `select distinct(seat_group_no) from Student`;
 
 
@@ -46,13 +38,6 @@ STUDENT_GROUP_SQL = `select distinct(seat_group_no) from Student`;
 const db = new sqlite3.Database(DB_PATH, sqlite3.OPEN_READONLY, (err) => {
     if (err) { console.error(err.message); return; }
     console.log('Connected to SQLite db.');
-});
-
-app.use((req, res, next) => {
-    res.on('finish', () => {
-        console.log(`Response returned at: ${Date.now()}`);
-    });
-    next();
 });
 
 /**
@@ -108,6 +93,9 @@ app.get('/question_ids', (req, res) => {
 
 });
 
+// want to select student based on the student group number and print out all the students that are in that group
+GROUP_STUDENT_SQL = `select first_name, last_name, student_id from Student SA where SA.seat_group_no = ?;`
+
 //print all the student groups
 app.get('/student_groups_roster', (req, res) => {
     res.set(LOCAL_OPTIONS);
@@ -115,12 +103,17 @@ app.get('/student_groups_roster', (req, res) => {
     db.all(GROUP_STUDENT_SQL, [req.query.seat_group_no], (err, rows) => {
         if (err) { return console.error(err.message); }
 
-        const response =  { student_ids: rows.map((x) => { return x.student_id }) } ;
+        const response = rows;
         res.json(response);
     });
 });
 
 //end point for student group correct answer percentage
+
+// return student id who answered correctly given question
+QUESTION_PERFORMANCE_SQL = `select distinct(SA.student_id), S.first_name, S.last_name, S.num_answered, S.num_correct
+from Student_Answer as SA, Question as Q, Student as S
+where (Q.question_id = ?) and (Q.correct_answer = SA.student_answer) and (SA.student_id = S.student_id);`
 
 //end point to show which students got certain questions right
 app.get('/question_performance', (req, res) => {
@@ -130,7 +123,7 @@ app.get('/question_performance', (req, res) => {
     db.all(QUESTION_PERFORMANCE_SQL, [req.query.question_id], (err, row) => {
         if (err) { return console.error(err.message); }
 
-        const response = { student_ids: row.map((x) => { return x.student_id }) } ;
+        const response = row ;
         res.json(response);
     });
 });

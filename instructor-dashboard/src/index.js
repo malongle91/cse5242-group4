@@ -34,6 +34,31 @@ async function getHotSpot(num){
     const responseJson = await response.json();
     return responseJson;
 }
+
+async function getStudent(studentId){
+    var link = 'http://localhost:3001/student_percentage?student_id=';
+    link += studentId;
+    const response = await fetch(link);
+    const responseJson = await response.json();
+    return responseJson;
+}
+
+async function questionPerformance(questionId){
+    var link = 'http://localhost:3001/question_performance?question_id=';
+    link += questionId;
+    const response = await fetch(link);
+    const responseJson = await response.json();
+    return responseJson;
+}
+
+async function getStudentGroups(seat_group_no){
+    var link = 'http://localhost:3001/student_groups_roster?seat_group_no=';
+    link += seat_group_no;
+    const response = await fetch(link);
+    const responseJson = await response.json();
+    return responseJson;
+}
+
 var optionsByFilter = {
     // student: ["Bob", "Jane", "Aaron"],
     // question: [1, 2, 3, 4, 5],
@@ -49,7 +74,7 @@ getSeatGroup().then((result) => {optionsByFilter.seat_group = result;});
 
 function changeFilter(value) {
     const filterByElement = document.getElementById("filter_by");
-
+    console.log('HERE');
     if (value.length == 0 || value === "total") {
          
         getRoster().then((result) => {
@@ -57,6 +82,10 @@ function changeFilter(value) {
             //console.log(result);
             const filterWholeClass = document.getElementById("whole_class")
             
+            const p_wc = document.getElementById("info");
+            p_wc.innerHTML = "<h4>Class Roster</h4>";
+
+            filterWholeClass.innerHTML = "";
             filterWholeClass.innerHTML  +="<tr><td>student id</td><td>First Name</td><td>Last Name</td><td>Num Answred</td><td>Num Correct</td><td>Correct %</td></tr>";
          
             var optionsHTML = "";
@@ -76,39 +105,16 @@ function changeFilter(value) {
         
         
     }
-    else if ( optionId === "1") {
-         
-        getHotSpot().then((result) => {
-           
-           
-            const filterWholeClass = document.getElementById("whole_class")
-            
-            filterWholeClass.innerHTML  +="<tr><td>student id</td><td>First Name</td><td>Last Name</td></tr>";
-         
-            var optionsHTML = "";
-            for (let x in result){
-                   
-                filterWholeClass.innerHTML += `<tr><td>${result[x].student_id}</td><td>${result[x].first_name}</td><td>${result[x].last_name}</td></tr>`;
-                  
-            }
-            
-            
-            filterWholeClass.hidden = false;
-            filterByElement.hidden = true;
-        
-        } );
-        
-        
-        
-        
-    }
+    
     else {
         var optionsHTML = "";
         const filterWholeClass = document.getElementById("whole_class")
         filterWholeClass.innerHTML ="";
         const options = optionsByFilter[value];
         for (var optionId in options) {
-            optionsHTML += `<option value="${optionId}">${options[optionId]}</option>`;
+            let option_value = value + "-" + options[optionId];
+            console.log(option_value);
+            optionsHTML += `<option value="${option_value}">${options[optionId]}</option>`;
         }
         filterByElement.innerHTML = optionsHTML;
         filterByElement.hidden = false;
@@ -117,13 +123,73 @@ function changeFilter(value) {
         
         // if(optionId )
     }
+
+    if(value == 'student_id'){
+        let studentId = document.getElementById('filter_by').value;
+    
+        console.log("value =" + studentId);
+        
+        getOption(studentId);
+
+        
+    }else if(value == 'question'){
+        let questionId = document.getElementById('filter_by').value;
+        console.log("value =" + questionId);
+        getOption(questionId);
+        
+    }else if(value == 'seat_group'){
+        let seatGroup = document.getElementById('filter_by').value;
+        console.log("value =" + seatGroup);
+        getOption(seatGroup);
+    }
 }
 
-function getOption(value){
-    selectElement = document.querySelector('#filter_by');
-    output = selectElement.value;
-    console.log(output);
+function getOption(selectId){
+    let selected_value = selectId.split("-")[1];
+    let parent_option = selectId.split("-")[0];
+     console.log("parent: " + parent_option);
+     if(parent_option == 'student_id'){
+        getStudent(selected_value).then((result) => {
+            console.log("student: " + selected_value);
+            
+            const filterWholeClass = document.getElementById("whole_class");
 
-    getHotSpot(output+1)
+            const p_s = document.getElementById("info");
+            p_s.innerHTML = "<h4>Student Info:</h4>";
+            
+            filterWholeClass.innerHTML  ="<tr><td>student id</td><td>Num Answred</td><td>Num Correct</td><td>Correct %</td></tr>";
+            filterWholeClass.innerHTML += `<tr><td>${result.student_id}</td><td>${result.num_answered}</td><td>${result.num_correct}</td><td>${result.correct_percentage}</td></tr>`;
 
+        });
+    }else if(parent_option == 'question'){
+        questionPerformance(selected_value).then((result) => {
+            console.log("Question #: " + selected_value);
+
+            const p_question = document.getElementById("info");
+            p_question.innerHTML = "<h4>Below is the list of students that have answered the question correctly</h4>";
+
+            const filterWholeClass = document.getElementById("whole_class");
+            
+            filterWholeClass.innerHTML  ="<tr><td>Student Id</td><td>First Name</td><td>Last Name</td><td>Num Answered</td><td>Num Correct</td></tr>";
+            for (let x in result){
+                filterWholeClass.innerHTML += `<tr><td>${result[x].student_id}</td><td>${result[x].first_name}</td><td>${result[x].last_name}</td><td>${result[x].num_answered}</td><td>${result[x].num_correct}</td></tr>`;
+            }
+        });
+    }else if(parent_option == 'seat_group'){
+        getStudentGroups(selected_value).then((result) => {
+            console.log("Seat group #: " + selected_value);
+
+            const filterWholeClass = document.getElementById("whole_class")
+            
+            const p_sg = document.getElementById("info");
+            p_sg.innerHTML = "<h4>Seat Group Roster:</h4>";
+
+            filterWholeClass.innerHTML  ="<tr><td>First Name</td><td>Last Name</td><td>Student Id</td></tr>";
+            for (let x in result){
+                filterWholeClass.innerHTML += `<tr><td>${result[x].first_name}</td><td>${result[x].last_name}</td><td>${result[x].student_id}</td></tr>`;
+            }
+        });
+    }
+    
 }
+

@@ -8,8 +8,9 @@
 </head>
 <body>
     <main>
+    <h2>Class Dashboard:</h2>
     <label for="correct_percentage_filters">
-        Correct answer percentage by:
+        Class Performance By:
     <label>
     <select name="correct_percentage_filters" id="correct_percentage_filters"
             onchange="changeFilter(this.value)">
@@ -24,7 +25,7 @@
             onchange="getOption(this.value)">
     </select>
     <br />
-    <h2>Student Performance:</h2>
+    <!-- <h2>Class Dashboard:</h2> -->
     <div id="info"></div>
     <table border="1">
         <tbody  name="whole_class" id="whole_class">
@@ -32,7 +33,12 @@
     </table>
 
     <h2>Hotspot</h2>
-    <p>People that are cheating using the hotspot query created in server.js</p>
+    <p>Students that are Cheating:</p>
+    <table border="1">
+        <tbody  name="cheaters" id="cheaters">
+        </tbody>
+    </table>
+
 </main>
 </body>
 </html>

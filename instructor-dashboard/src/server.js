@@ -31,7 +31,6 @@ QUESTION_IDS_SQL = `select question_id from Question;`
 
 STUDENT_GROUP_SQL = `select distinct(seat_group_no) from Student`;
 
-
 // create a percentage of how many students got a question right 
 
 
@@ -155,6 +154,45 @@ app.get('/student_groups', (req, res) => {
         res.json(response);
     });
 
+});
+
+
+HOTSPOT_LIST_SQL = 'select * from Hotspot;'
+
+app.get('/hotspot_list', (req, res) => {
+    res.set(LOCAL_OPTIONS);
+
+    // json file
+    db.all(HOTSPOT_LIST_SQL, [], (err, rows) => {
+        if (err) { return console.error(err.message); }
+
+        const response = rows
+        res.json(response);
+    });
+});
+
+HOTSPOT_BY_GROUP_SQL = 'select * from Hotspot as H, Student as S where (S.seat_group_no=?) and (S.seat_group_no=H.seat_group_no);'
+app.get('/group_hotspot', (req, res) => {
+    res.set(LOCAL_OPTIONS);
+
+    db.all(HOTSPOT_BY_GROUP_SQL, [req.query.seat_group_no], (err, rows) => {
+        if (err) { return console.error(err.message); }
+
+        const response = rows;
+        res.json(response);
+    });
+});
+
+HOTSPOT_BY_QUES = 'select * from Hotspot as H, Question as Q where (Q.question_id = ?) and (Q.question_id=H.question_id);'
+app.get('/ques_hotspot', (req, res) => {
+    res.set(LOCAL_OPTIONS);
+
+    db.all(HOTSPOT_BY_QUES, [req.query.question_id], (err, rows) => {
+        if (err) { return console.error(err.message); }
+
+        const response = rows;
+        res.json(response);
+    });
 });
 
 

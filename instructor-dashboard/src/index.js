@@ -27,13 +27,13 @@ async function getRoster(){
     return responseJson;
 }
 
-async function getHotSpot(num){
-    var link = 'http://127.0.0.1:3001/hotspot?seat_group_no=';
-    link += num;
-    const response = await fetch(link);
-    const responseJson = await response.json();
-    return responseJson;
-}
+// async function getHotSpot(num){
+//     var link = 'http://127.0.0.1:3001/hotspot?seat_group_no=';
+//     link += num;
+//     const response = await fetch(link);
+//     const responseJson = await response.json();
+//     return responseJson;
+// }
 
 async function getStudent(studentId){
     var link = 'http://localhost:3001/student_percentage?student_id=';
@@ -54,6 +54,28 @@ async function questionPerformance(questionId){
 async function getStudentGroups(seat_group_no){
     var link = 'http://localhost:3001/student_groups_roster?seat_group_no=';
     link += seat_group_no;
+    const response = await fetch(link);
+    const responseJson = await response.json();
+    return responseJson;
+}
+
+async function getHotSpot(){
+    const response = await fetch('http://127.0.0.1:3001/hotspot_list');
+    const responseJson = await response.json();
+    return responseJson;
+}
+
+async function getHotSpotByGroup(seat_group_no){
+    var link = 'http://localhost:3001/group_hotspot?seat_group_no=';
+    link += seat_group_no;
+    const response = await fetch(link);
+    const responseJson = await response.json();
+    return responseJson;
+}
+
+async function getHotSpotByQues(quesionId){
+    var link = 'http://localhost:3001/ques_hotspot?question_id=';
+    link += quesionId;
     const response = await fetch(link);
     const responseJson = await response.json();
     return responseJson;
@@ -101,7 +123,29 @@ function changeFilter(value) {
         
         } );
         
+        getHotSpot().then((result) => {
+           
+            //console.log(result);
+            const filterWholeClass = document.getElementById("cheaters")
+            
+            // const p_wc = document.getElementById("info");
+            // p_wc.innerHTML = "<h4>Class Roster</h4>";
+           
+            filterWholeClass.innerHTML = "";
+            filterWholeClass.innerHTML  +="<tr><td>student id</td><td>seat_group_no</td><td>question_id</td><td>incorrect_answer</td><td>hotspot_time</td></tr>";
+         
+            var optionsHTML = "";
+            for (let x in result){
+                   
+                filterWholeClass.innerHTML += `<tr><td>${result[x].student_id}</td><td>${result[x].seat_group_no}</td><td>${result[x].question_id}</td><td>${result[x].incorrect_answer}</td><td>${result[x].hotspot_time}</td></tr>`;
+                  
+            }
+            
+            
+            filterWholeClass.hidden = false;
+            filterByElement.hidden = true;
         
+        } );
         
         
     }
@@ -142,6 +186,7 @@ function changeFilter(value) {
         console.log("value =" + seatGroup);
         getOption(seatGroup);
     }
+
 }
 
 function getOption(selectId){
@@ -175,6 +220,26 @@ function getOption(selectId){
                 filterWholeClass.innerHTML += `<tr><td>${result[x].student_id}</td><td>${result[x].first_name}</td><td>${result[x].last_name}</td><td>${result[x].num_answered}</td><td>${result[x].num_correct}</td></tr>`;
             }
         });
+
+        getHotSpotByQues(selected_value).then((result) => {
+            // console.log("Seat group #: " + selected_value);
+
+            const filterWholeClass = document.getElementById("cheaters")
+            
+            // const p_wc = document.getElementById("info");
+            // p_wc.innerHTML = "<h4>Class Roster</h4>";
+           
+            filterWholeClass.innerHTML = "";
+            filterWholeClass.innerHTML  +="<tr><td>student id</td><td>seat_group_no</td><td>question_id</td><td>incorrect_answer</td><td>hotspot_time</td></tr>";
+         
+            var optionsHTML = "";
+            for (let x in result){
+                   
+                filterWholeClass.innerHTML += `<tr><td>${result[x].student_id}</td><td>${result[x].seat_group_no}</td><td>${result[x].question_id}</td><td>${result[x].incorrect_answer}</td><td>${result[x].hotspot_time}</td></tr>`;
+                  
+            }
+        });
+
     }else if(parent_option == 'seat_group'){
         getStudentGroups(selected_value).then((result) => {
             console.log("Seat group #: " + selected_value);
@@ -189,6 +254,25 @@ function getOption(selectId){
                 filterWholeClass.innerHTML += `<tr><td>${result[x].first_name}</td><td>${result[x].last_name}</td><td>${result[x].student_id}</td></tr>`;
             }
         });
+        getHotSpotByGroup(selected_value).then((result) => {
+            console.log("Seat group #: " + selected_value);
+
+            const filterWholeClass = document.getElementById("cheaters")
+            
+            // const p_wc = document.getElementById("info");
+            // p_wc.innerHTML = "<h4>Class Roster</h4>";
+           
+            filterWholeClass.innerHTML = "";
+            filterWholeClass.innerHTML  +="<tr><td>student id</td><td>seat_group_no</td><td>question_id</td><td>incorrect_answer</td><td>hotspot_time</td></tr>";
+         
+            var optionsHTML = "";
+            for (let x in result){
+                   
+                filterWholeClass.innerHTML += `<tr><td>${result[x].student_id}</td><td>${result[x].seat_group_no}</td><td>${result[x].question_id}</td><td>${result[x].incorrect_answer}</td><td>${result[x].hotspot_time}</td></tr>`;
+                  
+            }
+        });
+        
     }
     
 }

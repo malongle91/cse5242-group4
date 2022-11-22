@@ -1,6 +1,5 @@
 const express = require('express');
-const https = require('https');
-const { nextTick } = require('process');
+const responseTime = require('response-time')
 const app = express();
 const sqlite3 = require('sqlite3');
 const port = 3001;
@@ -38,6 +37,10 @@ const db = new sqlite3.Database(DB_PATH, sqlite3.OPEN_READONLY, (err) => {
     if (err) { console.error(err.message); return; }
     console.log('Connected to SQLite db.');
 });
+
+app.use(responseTime((req, res, time) => {
+    console.log(`Response returned in: ${time}`);
+}));
 
 /**
  * ENDPOINTS

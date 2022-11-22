@@ -24,8 +24,8 @@ Before running anything, ensure that the following technologies are all installe
 ## Node Package Installations
 The following directories are Node.js projects and need package installations underneath accordingly. Simply run `npm install` under each of these directories:
 + `broker-to-db/`
-+ `classroom-tracking/`
 + `instructor-dashboard/`
++ `student-quiz/`
 
 ### Dependencies
 See the `package.json` file under each of these directories for their package dependencies, which include the following but are not limited to:
@@ -61,6 +61,10 @@ To run the entire system, each of the following components need to be started in
 This system is divided into the following components:
 + **Student Quiz Form** - The student quiz (written in React) takes in the student's id, name, and seating group assigned before entering the user into a multiple-choice quiz. The student's answers are forwarded through the system in realtime, eventually making their way to the instructor dashboard.
 
+    + Note that the quiz questions and correct answers are manually defined here, under `student-quiz/src/questions.json`.
+    It is up to the user to enter the correct answer info consistently between this quiz definition and the questions
+    table of the results database.
+
 + **Message Broker** - This project uses ActiveMQ to a message broker on the local machine. The purpose of this broker is to handle the stream of data coming from the student quiz instances at a resonable capacity, receiving the data and forwarding it to eventually be stored by the database.
 
 + **Broker-to-Database Mapper** - This script is to be run in a Node.js environment as a single instance. The purpose of this script is to receive the forwarded data from the message broker (which includes student information and student answers to individual questions), and map the data into the appropriate fields to be inserted into the database.
@@ -71,13 +75,18 @@ This system is divided into the following components:
 
 The diagram below summarizes the high-level architecture created by these components:
 
-![System High-Level Architecture](/images/project-architecture.jpg)
+![System High-Level Architecture](/images/project-architecture.png)
 
 # Testing and Evaluation
-The system is tested for correctness and performance using the following:
+The system is tested for correctness, latency, and capacity using the following:
 
 + **Database Test Cases** - The `db/test` directory contains some manual test cases that are used to check for
-correct trigger behavior.
+correct trigger behavior. The CSV data located under `db/seed-data` reflects the result of running these test cases
+starting with the given questions and students.
+
++ **Latency Measures** - Unix millisecond timestamps are placed in the Student Quiz and Mapper to measure the latency of
+a student submitting their information or answer to a question. Similarly, a response-time middleware is used
+in the instructor-dashboard API to measure the latency of each OLAP query endpoint.
 
 + **Capacity Test Script** - Located under `capacity-test` is a Node.js script, `producer_runner.js`, for load testing that
 simulates a specified number of students all connecting to the ActiveMQ broker and taking a quiz.

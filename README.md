@@ -71,7 +71,7 @@ This system is divided into the following components:
 
 + **Quiz Results Database** - An SQLite database stores student information and their progress on the quiz, which is to be queried by the instructor dashboard in realtime for analytical information. The database stores information such as the student's name and id, the correct answers to the quiz, the students' answers to each question, and potential hotspots found for detecting cheating.
 
-+ **Instructor Dashboard** - Finally, the instructor dashboard queries the database and displays the realtime results (refreshed within short time intervals) of the students taking the quiz, including correct answer percentages by various filters and detected hotspots.
++ **Instructor Dashboard** - Finally, the instructor dashboard queries the database and displays the realtime results (refreshed within short time intervals) of the students taking the quiz, including correct answer percentages by various filters and detected hotspots. To run t the script make sure you are in the \instructor-dashboar\src folder and run node server.js. This will connect to the database. Once this is done, you can open the index.html on chrome from the src folder. This will open the dashboard for the instructors. You will have to refresh the dashboard to get results when students submit their questions and the quiz. The dashboard has a filter where you can view the data of the whole class, each student's performance, seat group performance, and based on each question. The hotspot will also be display on each view which is a display of which students we think are cheating.  
 
 The diagram below summarizes the high-level architecture created by these components:
 

@@ -5,7 +5,6 @@ CREATE TABLE IF NOT EXISTS Student (
     seat_group_no INTEGER NOT NULL,
     num_answered INTEGER DEFAULT 0 NOT NULL,
     num_correct INTEGER DEFAULT 0 NOT NULL,
-    is_submitted BOOLEAN DEFAULT FALSE NOT NULL CHECK (is_submitted IN (TRUE, FALSE))
 );
 
 CREATE TABLE IF NOT EXISTS Question ( 

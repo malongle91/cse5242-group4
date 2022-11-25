@@ -71,6 +71,9 @@ async function getHotSpotByQues(quesionId){
     return responseJson;
 }
 
+// setTimeout(() => {
+//     document.location.reload(true);
+//   }, 3000);
 
 // Document Nodes
 

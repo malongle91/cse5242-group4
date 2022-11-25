@@ -13,19 +13,29 @@
         <nav style="margin-bottom:0rem">
             <h1>Class Dashboard</h1>
             <button onClick="refreshResults()">&#8635</button>
-        </nav>
-        <label for="filters_dropdown">
-            Class Performance By:
-        </label>
-        <select name="filters_dropdown" id="filters_dropdown" onchange="renderResults(this.value)" autocomplete="off">
-            <option value="total" selected>The Whole Class</option>
-            <option value="student_id">Student Id</option>
-            <option value="question">Question</option>
-            <option value="seat_group">Seating Group</option>
-        </select>
-        <select name="filter_options_dropdown" id="filter_options_dropdown" hidden
-            onchange="renderResultsForFilter(this.value)" autocomplete="off">
-        </select>
+        
+            <label for="filters_dropdown">
+                Class Performance By:
+            </label>
+            <ul>
+                <li>
+                    <select name="filters_dropdown" id="filters_dropdown" onchange="renderResults(this.value)" autocomplete="off">
+                        <option value="total" selected>The Whole Class</option>
+                        <option value="student_id">Student Id</option>
+                        <option value="question">Question</option>
+                        <option value="seat_group">Seating Group</option>
+                    </select>
+                </li>
+                <li>
+                    <select name="filter_options_dropdown" id="filter_options_dropdown" hidden
+                onchange="renderResultsForFilter(this.value)" autocomplete="off">
+                    </select>
+                </li>
+            </ul>
+            
+
+    </nav>
+    
         <br />
         <div id="info"></div>
         <table border="1" id="correct_percentage_table">

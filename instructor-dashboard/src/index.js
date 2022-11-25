@@ -132,11 +132,11 @@ function renderResultsForWholeClass() {
     hotspotTableBody.innerHTML = "";
     hotspotTableLabel.innerHTML = "Students that are suspected cheating in Whole Class:";
 
-    resultsTableHeader.innerHTML = "<tr><td>student id</td><td>First Name</td><td>Last Name</td><td>Num Answred</td><td>Num Correct</td><td>Correct %</td></tr>";
+    resultsTableHeader.innerHTML = "<tr><td>Student ID</td><td>First Name</td><td>Last Name</td><td>Num Answered</td><td>Num Correct</td><td>Correct %</td></tr>";
 
     getRoster().then((result) => {
         for (let x in result){
-            resultsTableBody.innerHTML += `<tr><td>${result[x].student_id}</td><td>${result[x].first_name}</td><td>${result[x].last_name}</td><td>${result[x].num_answered}</td><td>${result[x].num_correct}</td><td>${result[x].correct_percentage}</td></tr>`;
+            resultsTableBody.innerHTML += `<tr><td>${result[x].student_id}</td><td>${result[x].first_name}</td><td>${result[x].last_name}</td><td>${result[x].num_answered}</td><td>${result[x].num_correct}</td><td>${(result[x].correct_percentage * 100).toFixed(2)}</td></tr>`;
         }
     });
 
@@ -165,10 +165,10 @@ function renderResultsForFilter(filterOptionValue){
 
     if (parent_option == 'student_id') {
         resultsTableLabel.innerHTML = `Info for Student ${selected_value}:`;
-        resultsTableHeader.innerHTML = "<tr><td>student id</td><td>Num Answred</td><td>Num Correct</td><td>Correct %</td></tr>";
+        resultsTableHeader.innerHTML = "<tr><td>Student ID</td><td>Num Answered</td><td>Num Correct</td><td>Correct %</td></tr>";
 
         getStudent(selected_value).then((result) => {
-            resultsTableBody.innerHTML += `<tr><td>${result.student_id}</td><td>${result.num_answered}</td><td>${result.num_correct}</td><td>${result.correct_percentage}</td></tr>`;
+            resultsTableBody.innerHTML += `<tr><td>${result.student_id}</td><td>${result.num_answered}</td><td>${result.num_correct}</td><td>${(result.correct_percentage * 100).toFixed(2)}</td></tr>`;
         });
 
         hotspotTableBody.innerHTML = "";
@@ -181,7 +181,7 @@ function renderResultsForFilter(filterOptionValue){
         });
     } else if (parent_option == 'question') {
         resultsTableLabel.innerHTML = `Students who have correctly answered Question ${selected_value}:`;
-        resultsTableHeader.innerHTML = "<tr><td>Student Id</td><td>First Name</td><td>Last Name</td><td>Num Answered</td><td>Num Correct</td></tr>";
+        resultsTableHeader.innerHTML = "<tr><td>Student ID</td><td>First Name</td><td>Last Name</td><td>Num Answered</td><td>Num Correct</td></tr>";
 
         questionPerformance(selected_value).then((result) => {
             for (let x in result){
@@ -199,7 +199,7 @@ function renderResultsForFilter(filterOptionValue){
         });
     } else if (parent_option == 'seat_group') {
         resultsTableLabel.innerHTML = `Roster for Seat Group ${selected_value}:`;
-        resultsTableHeader.innerHTML = "<tr><td>First Name</td><td>Last Name</td><td>Student Id</td></tr>";
+        resultsTableHeader.innerHTML = "<tr><td>First Name</td><td>Last Name</td><td>Student ID</td></tr>";
 
         getStudentGroups(selected_value).then((result) => {
             for (let x in result){

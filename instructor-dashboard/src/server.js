@@ -115,7 +115,7 @@ app.get('/student_groups_roster', (req, res) => {
 // return student id who answered correctly given question
 QUESTION_PERFORMANCE_SQL = `select distinct(SA.student_id), S.first_name, S.last_name, S.num_answered, S.num_correct
 from Student_Answer as SA, Question as Q, Student as S
-where (Q.question_id = ?) and (Q.correct_answer = SA.student_answer) and (SA.student_id = S.student_id);`
+where (Q.question_id = ?) and (Q.correct_answer = SA.student_answer) and (SA.student_id = S.student_id) and (SA.question_id = Q.question_id);`
 
 //end point to show which students got certain questions right
 app.get('/question_performance', (req, res) => {

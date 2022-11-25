@@ -1,44 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Instructor Dashboard</title>
     <script src="index.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css"> 
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css">
 </head>
+
 <body>
     <main>
-    <h2>Class Dashboard:</h2>
-    <label for="correct_percentage_filters">
-        Class Performance By:
-    <label>
-    <select name="correct_percentage_filters" id="correct_percentage_filters"
-            onchange="changeFilter(this.value)">
-        <option value="" disabled selected>Select filter</option>
-        <option value="total">The Whole Class</option>
-        <option value="student_id">Student Id</option>
-        <option value="question">Question</option>
-        <option value="seat_group">Seating Group</option>
-        <!-- <option value="hot" -->
-    </select>
-    <select name="filter_by" id="filter_by" hidden
-            onchange="getOption(this.value)">
-    </select>
-    <br />
-    <!-- <h2>Class Dashboard:</h2> -->
-    <div id="info"></div>
-    <table border="1">
-        <tbody  name="whole_class" id="whole_class">
-        </tbody>
-    </table>
+        <nav style="margin-bottom:0rem">
+            <h1>Class Dashboard</h1>
+            <button onClick="refreshResults()">&#8635</button>
+        </nav>
+        <label for="filters_dropdown">
+            Class Performance By:
+        </label>
+        <select name="filters_dropdown" id="filters_dropdown" onchange="renderResults(this.value)" autocomplete="off">
+            <option value="total" selected>The Whole Class</option>
+            <option value="student_id">Student Id</option>
+            <option value="question">Question</option>
+            <option value="seat_group">Seating Group</option>
+        </select>
+        <select name="filter_options_dropdown" id="filter_options_dropdown" hidden
+            onchange="renderResultsForFilter(this.value)" autocomplete="off">
+        </select>
+        <br />
+        <div id="info"></div>
+        <table border="1" id="correct_percentage_table">
+            <thead></thead>
+            <tbody></tbody>
+        </table>
 
-    <h2>Hotspot</h2>
-    <p>Students that are Cheating:</p>
-    <table border="1">
-        <tbody  name="cheaters" id="cheaters">
-        </tbody>
-    </table>
+        <h2>Hotspots</h2>
+        <p>Students that are Cheating:</p>
+        <table border="1" id="hotspot_table">
+            <thead>
+                <tr>
+                    <td>student id</td>
+                    <td>seat_group_no</td>
+                    <td>question_id</td>
+                    <td>incorrect_answer</td>
+                    <td>hotspot_time</td>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
 
-</main>
+    </main>
 </body>
+
 </html>

@@ -1,5 +1,3 @@
-// const { FORMAT } = require("sqlite3");
-
 async function getStudentIds() {
     const response = await fetch('http://127.0.0.1:3001/student_ids'); //, { mode: 'no-cors' }); // fetching at the api, returns a promise
     const responseJson = await response.json();                     // extracts the json based on the response
@@ -7,14 +5,14 @@ async function getStudentIds() {
 }
 
 // do the above for questions for the filter
-async function getQuestion() {
+async function getQuestions() {
     const response = await fetch('http://127.0.0.1:3001/question_ids'); //, { mode: 'no-cors' }); // fetching at the api, returns a promise
     const responseJson = await response.json();                     // extracts the json based on the response
     return 'question_ids' in responseJson ? responseJson.question_ids : [];   // ternary operator, checks for  the reponse and prints out the student_ids else prints an array
 }
 
 // having all the seat_group_no in the filter
-async function getSeatGroup() {
+async function getSeatGroups() {
     const response = await fetch('http://127.0.0.1:3001/student_groups'); //, { mode: 'no-cors' }); // fetching at the api, returns a promise
     const responseJson = await response.json();                     // extracts the json based on the response
     return 'seat_group_no' in responseJson ? responseJson.seat_group_no : [];   // ternary operator, checks for  the reponse and prints out the student_ids else prints an array
@@ -26,14 +24,6 @@ async function getRoster(){
     const responseJson = await response.json();
     return responseJson;
 }
-
-// async function getHotSpot(num){
-//     var link = 'http://127.0.0.1:3001/hotspot?seat_group_no=';
-//     link += num;
-//     const response = await fetch(link);
-//     const responseJson = await response.json();
-//     return responseJson;
-// }
 
 async function getStudent(studentId){
     var link = 'http://localhost:3001/student_percentage?student_id=';
@@ -81,198 +71,144 @@ async function getHotSpotByQues(quesionId){
     return responseJson;
 }
 
-var optionsByFilter = {
-    // student: ["Bob", "Jane", "Aaron"],
-    // question: [1, 2, 3, 4, 5],
-    seat_group: ["Teacher's Pets", "Kids in the Back", "Quiet Kids"]
-}
 
-getStudentIds().then((result) => {optionsByFilter.student_id = result;});
+// Document Nodes
 
-getQuestion().then((result) => {optionsByFilter.question = result;});
-getSeatGroup().then((result) => {optionsByFilter.seat_group = result;});
-
-
-
-function changeFilter(value) {
-    const filterByElement = document.getElementById("filter_by");
-    console.log('HERE');
-    if (value.length == 0 || value === "total") {
-         
-        getRoster().then((result) => {
-           
-            //console.log(result);
-            const filterWholeClass = document.getElementById("whole_class")
-            
-            const p_wc = document.getElementById("info");
-            p_wc.innerHTML = "<h4>Class Roster</h4>";
-
-            filterWholeClass.innerHTML = "";
-            filterWholeClass.innerHTML  +="<tr><td>student id</td><td>First Name</td><td>Last Name</td><td>Num Answred</td><td>Num Correct</td><td>Correct %</td></tr>";
-         
-            var optionsHTML = "";
-            for (let x in result){
-                   
-                filterWholeClass.innerHTML += `<tr><td>${result[x].student_id}</td><td>${result[x].first_name}</td><td>${result[x].last_name}</td><td>${result[x].num_answered}</td><td>${result[x].num_correct}</td><td>${result[x].correct_percentage}</td></tr>`;
-                  
-            }
-            
-            
-            filterWholeClass.hidden = false;
-            filterByElement.hidden = true;
-        
-        } );
-        
-        getHotSpot().then((result) => {
-           
-            //console.log(result);
-            const filterWholeClass = document.getElementById("cheaters")
-            
-            // const p_wc = document.getElementById("info");
-            // p_wc.innerHTML = "<h4>Class Roster</h4>";
-           
-            filterWholeClass.innerHTML = "";
-            filterWholeClass.innerHTML  +="<tr><td>student id</td><td>seat_group_no</td><td>question_id</td><td>incorrect_answer</td><td>hotspot_time</td></tr>";
-         
-            var optionsHTML = "";
-            for (let x in result){
-                   
-                filterWholeClass.innerHTML += `<tr><td>${result[x].student_id}</td><td>${result[x].seat_group_no}</td><td>${result[x].question_id}</td><td>${result[x].incorrect_answer}</td><td>${result[x].hotspot_time}</td></tr>`;
-                  
-            }
-            
-            
-            filterWholeClass.hidden = false;
-            filterByElement.hidden = true;
-        
-        } );
-        
-        
-    }
+function renderResults(filterValue) {
+    return new Promise((resolve, reject) => {
+        const filterOptionsDropdown = document.getElementById("filter_options_dropdown");
     
-    else {
-        var optionsHTML = "";
-        const filterWholeClass = document.getElementById("whole_class")
-        filterWholeClass.innerHTML ="";
-        const options = optionsByFilter[value];
-        for (var optionId in options) {
-            let option_value = value + "-" + options[optionId];
-            console.log(option_value);
-            optionsHTML += `<option value="${option_value}">${options[optionId]}</option>`;
+        if (filterValue === "total") {
+            filterOptionsDropdown.hidden = true;
+            renderResultsForWholeClass();
+        } else {
+            filterOptionsDropdown.innerHTML = "<option value=\"\" disabled selected>Select option</option>";
+    
+            if (filterValue === "student_id") {
+                options = getStudentIds();
+            } else if (filterValue === "question") {
+                options = getQuestions();
+            } else if (filterValue === "seat_group") {
+                options = getSeatGroups();
+            }
+    
+            options.then((result) => {
+                for (var optionId in result) {
+                    let option_value = filterValue + "-" + result[optionId];
+                    filterOptionsDropdown.innerHTML += `<option value="${option_value}">${result[optionId]}</option>`;
+                }
+                filterOptionsDropdown.hidden = false;
+                resolve();
+            });
         }
-        filterByElement.innerHTML = optionsHTML;
-        filterByElement.hidden = false;
-        // var value = document.getElementById(optionId).value;
-        // console.log(value);
-        
-        // if(optionId )
-    }
-
-    if(value == 'student_id'){
-        let studentId = document.getElementById('filter_by').value;
-    
-        console.log("value =" + studentId);
-        
-        getOption(studentId);
-
-        
-    }else if(value == 'question'){
-        let questionId = document.getElementById('filter_by').value;
-        console.log("value =" + questionId);
-        getOption(questionId);
-        
-    }else if(value == 'seat_group'){
-        let seatGroup = document.getElementById('filter_by').value;
-        console.log("value =" + seatGroup);
-        getOption(seatGroup);
-    }
-
+    });
 }
 
-function getOption(selectId){
-    let selected_value = selectId.split("-")[1];
-    let parent_option = selectId.split("-")[0];
-     console.log("parent: " + parent_option);
-     if(parent_option == 'student_id'){
+function renderResultsForWholeClass() {
+    const resultsTable = document.getElementById("correct_percentage_table");
+    let resultsTableLabel = document.getElementById("info");
+    let resultsTableHeader = resultsTable.getElementsByTagName("thead")[0];
+    let resultsTableBody = resultsTable.getElementsByTagName("tbody")[0];
+
+    resultsTableHeader.innerHTML = "";
+    resultsTableBody.innerHTML = "";
+
+    const hotspotTable = document.getElementById("hotspot_table");
+    let hotspotTableBody = hotspotTable.getElementsByTagName("tbody")[0];
+
+    resultsTableLabel.innerHTML = "<h4>Class Roster</h4>";
+    hotspotTableBody.innerHTML = "";
+
+    resultsTableHeader.innerHTML = "<tr><td>student id</td><td>First Name</td><td>Last Name</td><td>Num Answred</td><td>Num Correct</td><td>Correct %</td></tr>";
+
+    getRoster().then((result) => {
+        for (let x in result){
+            resultsTableBody.innerHTML += `<tr><td>${result[x].student_id}</td><td>${result[x].first_name}</td><td>${result[x].last_name}</td><td>${result[x].num_answered}</td><td>${result[x].num_correct}</td><td>${result[x].correct_percentage}</td></tr>`;
+        }
+    });
+
+    getHotSpot().then((result) => {
+        for (let x in result){
+            hotspotTableBody.innerHTML += `<tr><td>${result[x].student_id}</td><td>${result[x].seat_group_no}</td><td>${result[x].question_id}</td><td>${result[x].incorrect_answer}</td><td>${result[x].hotspot_time}</td></tr>`;
+        }
+    })
+}
+
+function renderResultsForFilter(filterOptionValue){
+    let selected_value = filterOptionValue.split("-")[1];
+    let parent_option = filterOptionValue.split("-")[0];
+
+    const resultsTable = document.getElementById("correct_percentage_table");
+    let resultsTableLabel = document.getElementById("info");
+    let resultsTableHeader = resultsTable.getElementsByTagName("thead")[0];
+    let resultsTableBody = resultsTable.getElementsByTagName("tbody")[0];
+
+    resultsTableHeader.innerHTML = "";
+    resultsTableBody.innerHTML = "";
+
+    const hotspotTable = document.getElementById("hotspot_table");
+    let hotspotTableBody = hotspotTable.getElementsByTagName("tbody")[0];
+
+    if (parent_option == 'student_id') {
+        resultsTableLabel.innerHTML = "<h4>Student Info:</h4>";
+        resultsTableHeader.innerHTML = "<tr><td>student id</td><td>Num Answred</td><td>Num Correct</td><td>Correct %</td></tr>";
+
         getStudent(selected_value).then((result) => {
-            console.log("student: " + selected_value);
-            
-            const filterWholeClass = document.getElementById("whole_class");
-
-            const p_s = document.getElementById("info");
-            p_s.innerHTML = "<h4>Student Info:</h4>";
-            
-            filterWholeClass.innerHTML  ="<tr><td>student id</td><td>Num Answred</td><td>Num Correct</td><td>Correct %</td></tr>";
-            filterWholeClass.innerHTML += `<tr><td>${result.student_id}</td><td>${result.num_answered}</td><td>${result.num_correct}</td><td>${result.correct_percentage}</td></tr>`;
-
+            resultsTableBody.innerHTML += `<tr><td>${result.student_id}</td><td>${result.num_answered}</td><td>${result.num_correct}</td><td>${result.correct_percentage}</td></tr>`;
         });
-    }else if(parent_option == 'question'){
+    } else if (parent_option == 'question') {
+        resultsTableLabel.innerHTML = "<h4>Below is the list of students that have answered the question correctly</h4>";
+        resultsTableHeader.innerHTML = "<tr><td>Student Id</td><td>First Name</td><td>Last Name</td><td>Num Answered</td><td>Num Correct</td></tr>";
+
         questionPerformance(selected_value).then((result) => {
-            console.log("Question #: " + selected_value);
-
-            const p_question = document.getElementById("info");
-            p_question.innerHTML = "<h4>Below is the list of students that have answered the question correctly</h4>";
-
-            const filterWholeClass = document.getElementById("whole_class");
-            
-            filterWholeClass.innerHTML  ="<tr><td>Student Id</td><td>First Name</td><td>Last Name</td><td>Num Answered</td><td>Num Correct</td></tr>";
             for (let x in result){
-                filterWholeClass.innerHTML += `<tr><td>${result[x].student_id}</td><td>${result[x].first_name}</td><td>${result[x].last_name}</td><td>${result[x].num_answered}</td><td>${result[x].num_correct}</td></tr>`;
+                resultsTableBody.innerHTML += `<tr><td>${result[x].student_id}</td><td>${result[x].first_name}</td><td>${result[x].last_name}</td><td>${result[x].num_answered}</td><td>${result[x].num_correct}</td></tr>`;
             }
         });
+
+        hotspotTableBody.innerHTML = "";
 
         getHotSpotByQues(selected_value).then((result) => {
-            // console.log("Seat group #: " + selected_value);
-
-            const filterWholeClass = document.getElementById("cheaters")
-            
-            // const p_wc = document.getElementById("info");
-            // p_wc.innerHTML = "<h4>Class Roster</h4>";
-           
-            filterWholeClass.innerHTML = "";
-            filterWholeClass.innerHTML  +="<tr><td>student id</td><td>seat_group_no</td><td>question_id</td><td>incorrect_answer</td><td>hotspot_time</td></tr>";
-         
-            var optionsHTML = "";
             for (let x in result){
-                   
-                filterWholeClass.innerHTML += `<tr><td>${result[x].student_id}</td><td>${result[x].seat_group_no}</td><td>${result[x].question_id}</td><td>${result[x].incorrect_answer}</td><td>${result[x].hotspot_time}</td></tr>`;
-                  
+                hotspotTableBody.innerHTML += `<tr><td>${result[x].student_id}</td><td>${result[x].seat_group_no}</td><td>${result[x].question_id}</td><td>${result[x].incorrect_answer}</td><td>${result[x].hotspot_time}</td></tr>`;
             }
         });
+    } else if (parent_option == 'seat_group') {
+        resultsTableLabel.innerHTML = "<h4>Seat Group Roster:</h4>";
+        resultsTableHeader.innerHTML = "<tr><td>First Name</td><td>Last Name</td><td>Student Id</td></tr>";
 
-    }else if(parent_option == 'seat_group'){
         getStudentGroups(selected_value).then((result) => {
-            console.log("Seat group #: " + selected_value);
-
-            const filterWholeClass = document.getElementById("whole_class")
-            
-            const p_sg = document.getElementById("info");
-            p_sg.innerHTML = "<h4>Seat Group Roster:</h4>";
-
-            filterWholeClass.innerHTML  ="<tr><td>First Name</td><td>Last Name</td><td>Student Id</td></tr>";
             for (let x in result){
-                filterWholeClass.innerHTML += `<tr><td>${result[x].first_name}</td><td>${result[x].last_name}</td><td>${result[x].student_id}</td></tr>`;
+                resultsTableBody.innerHTML += `<tr><td>${result[x].first_name}</td><td>${result[x].last_name}</td><td>${result[x].student_id}</td></tr>`;
             }
         });
+
+        hotspotTableBody.innerHTML = "";
+
         getHotSpotByGroup(selected_value).then((result) => {
-            console.log("Seat group #: " + selected_value);
-
-            const filterWholeClass = document.getElementById("cheaters")
-            
-            // const p_wc = document.getElementById("info");
-            // p_wc.innerHTML = "<h4>Class Roster</h4>";
-           
-            filterWholeClass.innerHTML = "";
-            filterWholeClass.innerHTML  +="<tr><td>student id</td><td>seat_group_no</td><td>question_id</td><td>incorrect_answer</td><td>hotspot_time</td></tr>";
-         
-            var optionsHTML = "";
             for (let x in result){
-                   
                 filterWholeClass.innerHTML += `<tr><td>${result[x].student_id}</td><td>${result[x].seat_group_no}</td><td>${result[x].question_id}</td><td>${result[x].incorrect_answer}</td><td>${result[x].hotspot_time}</td></tr>`;
-                  
             }
         });
-        
     }
-    
+}
+
+async function refreshResults() {
+    const filtersDropdownValue = document.getElementById("filters_dropdown").value;
+    if (filtersDropdownValue.length === 0 || filtersDropdownValue == "total") {
+        renderResults(filtersDropdownValue);
+    } else {
+        var filterOptionsDropdown = document.getElementById("filter_options_dropdown");
+        const existingValue = filterOptionsDropdown.value;
+        await renderResults(filtersDropdownValue);
+
+        for (var i = 0; i < filterOptionsDropdown.options.length; i++) {
+            if (filterOptionsDropdown[i].value === existingValue) {
+                filterOptionsDropdown[i].setAttribute("selected", true);
+                filterOptionsDropdown.value = existingValue;
+                break;
+            }
+        }
+        renderResultsForFilter(existingValue);
+    }
 }

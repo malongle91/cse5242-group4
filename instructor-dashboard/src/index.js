@@ -71,6 +71,14 @@ async function getHotSpotByQues(quesionId){
     return responseJson;
 }
 
+async function getHotSpotByStudent(studentId){
+    var link = 'http://localhost:3001/student_hotspot?student_id=';
+    link += studentId;
+    const response = await fetch(link);
+    const responseJson = await response.json();
+    return responseJson;
+}
+
 // setTimeout(() => {
 //     document.location.reload(true);
 //   }, 3000);
@@ -109,7 +117,7 @@ function renderResults(filterValue) {
 
 function renderResultsForWholeClass() {
     const resultsTable = document.getElementById("correct_percentage_table");
-    let resultsTableLabel = document.getElementById("info");
+    let resultsTableLabel = document.getElementById("correct_percentage_label");
     let resultsTableHeader = resultsTable.getElementsByTagName("thead")[0];
     let resultsTableBody = resultsTable.getElementsByTagName("tbody")[0];
 
@@ -118,9 +126,11 @@ function renderResultsForWholeClass() {
 
     const hotspotTable = document.getElementById("hotspot_table");
     let hotspotTableBody = hotspotTable.getElementsByTagName("tbody")[0];
+    let hotspotTableLabel = document.getElementById("hotspot_label");
 
-    resultsTableLabel.innerHTML = "<h4>Class Roster</h4>";
+    resultsTableLabel.innerHTML = "Class roster and information:";
     hotspotTableBody.innerHTML = "";
+    hotspotTableLabel.innerHTML = "Students that are suspected cheating in Whole Class:";
 
     resultsTableHeader.innerHTML = "<tr><td>student id</td><td>First Name</td><td>Last Name</td><td>Num Answred</td><td>Num Correct</td><td>Correct %</td></tr>";
 
@@ -142,7 +152,7 @@ function renderResultsForFilter(filterOptionValue){
     let parent_option = filterOptionValue.split("-")[0];
 
     const resultsTable = document.getElementById("correct_percentage_table");
-    let resultsTableLabel = document.getElementById("info");
+    let resultsTableLabel = document.getElementById("correct_percentage_label");
     let resultsTableHeader = resultsTable.getElementsByTagName("thead")[0];
     let resultsTableBody = resultsTable.getElementsByTagName("tbody")[0];
 
@@ -151,16 +161,26 @@ function renderResultsForFilter(filterOptionValue){
 
     const hotspotTable = document.getElementById("hotspot_table");
     let hotspotTableBody = hotspotTable.getElementsByTagName("tbody")[0];
+    let hotspotTableLabel = document.getElementById("hotspot_label");
 
     if (parent_option == 'student_id') {
-        resultsTableLabel.innerHTML = "<h4>Student Info:</h4>";
+        resultsTableLabel.innerHTML = `Info for Student ${selected_value}:`;
         resultsTableHeader.innerHTML = "<tr><td>student id</td><td>Num Answred</td><td>Num Correct</td><td>Correct %</td></tr>";
 
         getStudent(selected_value).then((result) => {
             resultsTableBody.innerHTML += `<tr><td>${result.student_id}</td><td>${result.num_answered}</td><td>${result.num_correct}</td><td>${result.correct_percentage}</td></tr>`;
         });
+
+        hotspotTableBody.innerHTML = "";
+        hotspotTableLabel.innerHTML = `Hotspots found for Student ${selected_value}:`;
+
+        getHotSpotByStudent(selected_value).then((result) => {
+            for (let x in result){
+                hotspotTableBody.innerHTML += `<tr><td>${result[x].student_id}</td><td>${result[x].seat_group_no}</td><td>${result[x].question_id}</td><td>${result[x].incorrect_answer}</td><td>${result[x].hotspot_time}</td></tr>`;
+            }
+        });
     } else if (parent_option == 'question') {
-        resultsTableLabel.innerHTML = "<h4>Below is the list of students that have answered the question correctly</h4>";
+        resultsTableLabel.innerHTML = `Students who have correctly answered Question ${selected_value}:`;
         resultsTableHeader.innerHTML = "<tr><td>Student Id</td><td>First Name</td><td>Last Name</td><td>Num Answered</td><td>Num Correct</td></tr>";
 
         questionPerformance(selected_value).then((result) => {
@@ -170,6 +190,7 @@ function renderResultsForFilter(filterOptionValue){
         });
 
         hotspotTableBody.innerHTML = "";
+        hotspotTableLabel.innerHTML = `Students that are suspected cheating on Question ${selected_value}:`;
 
         getHotSpotByQues(selected_value).then((result) => {
             for (let x in result){
@@ -177,7 +198,7 @@ function renderResultsForFilter(filterOptionValue){
             }
         });
     } else if (parent_option == 'seat_group') {
-        resultsTableLabel.innerHTML = "<h4>Seat Group Roster:</h4>";
+        resultsTableLabel.innerHTML = `Roster for Seat Group ${selected_value}:`;
         resultsTableHeader.innerHTML = "<tr><td>First Name</td><td>Last Name</td><td>Student Id</td></tr>";
 
         getStudentGroups(selected_value).then((result) => {
@@ -187,10 +208,11 @@ function renderResultsForFilter(filterOptionValue){
         });
 
         hotspotTableBody.innerHTML = "";
+        hotspotTableLabel.innerHTML = `Students that are suspected cheating in Group ${selected_value}:`;
 
         getHotSpotByGroup(selected_value).then((result) => {
             for (let x in result){
-                filterWholeClass.innerHTML += `<tr><td>${result[x].student_id}</td><td>${result[x].seat_group_no}</td><td>${result[x].question_id}</td><td>${result[x].incorrect_answer}</td><td>${result[x].hotspot_time}</td></tr>`;
+                hotspotTableBody.innerHTML += `<tr><td>${result[x].student_id}</td><td>${result[x].seat_group_no}</td><td>${result[x].question_id}</td><td>${result[x].incorrect_answer}</td><td>${result[x].hotspot_time}</td></tr>`;
             }
         });
     }

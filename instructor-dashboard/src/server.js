@@ -174,7 +174,7 @@ app.get('/hotspot_list', (req, res) => {
     });
 });
 
-HOTSPOT_BY_GROUP_SQL = 'select * from Hotspot as H, Student as S where (S.seat_group_no=?) and (S.seat_group_no=H.seat_group_no);'
+HOTSPOT_BY_GROUP_SQL = 'select * from Hotspot as H where (seat_group_no=?);'
 app.get('/group_hotspot', (req, res) => {
     res.set(LOCAL_OPTIONS);
 
@@ -186,7 +186,7 @@ app.get('/group_hotspot', (req, res) => {
     });
 });
 
-HOTSPOT_BY_QUES = 'select * from Hotspot as H, Question as Q where (Q.question_id = ?) and (Q.question_id=H.question_id);'
+HOTSPOT_BY_QUES = 'select * from Hotspot as H where (question_id = ?);'
 app.get('/ques_hotspot', (req, res) => {
     res.set(LOCAL_OPTIONS);
 
@@ -198,6 +198,17 @@ app.get('/ques_hotspot', (req, res) => {
     });
 });
 
+HOTSPOT_BY_STUDENT_SQL = 'select * from Hotspot as H where (student_id = ?);'
+app.get('/student_hotspot', (req, res) => {
+    res.set(LOCAL_OPTIONS);
+
+    db.all(HOTSPOT_BY_STUDENT_SQL, [req.query.student_id], (err, rows) => {
+        if (err) { return console.error(err.message); }
+
+        const response = rows;
+        res.json(response);
+    });
+});
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

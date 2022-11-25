@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css">
 </head>
 
-<body>
+<body onload="renderResultsForWholeClass()">
     <main>
         <nav style="margin-bottom:0rem">
             <h1>Class Dashboard</h1>
@@ -37,14 +37,14 @@
     </nav>
     
         <br />
-        <div id="info"></div>
+        <p id="correct_percentage_label"></p>
         <table border="1" id="correct_percentage_table">
             <thead></thead>
             <tbody></tbody>
         </table>
 
-        <h2>Hotspots</h2>
-        <p>Students that are Cheating:</p>
+        <h2>Hotspot List</h2>
+        <p id="hotspot_label">Students that are suspected cheating in whole class:</p>
         <table border="1" id="hotspot_table">
             <thead>
                 <tr>

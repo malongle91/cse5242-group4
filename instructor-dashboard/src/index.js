@@ -71,41 +71,37 @@ async function getHotSpotByQues(quesionId){
     return responseJson;
 }
 
-// var optionsByFilter = {}
-
-// getStudentIds().then((result) => {optionsByFilter.student_id = result;});
-// getQuestions().then((result) => {optionsByFilter.question = result;});
-// getSeatGroups().then((result) => {optionsByFilter.seat_group = result;});
-
 
 // Document Nodes
 
 function renderResults(filterValue) {
-    const filterOptionsDropdown = document.getElementById("filter_options_dropdown");
-
-    if (filterValue === "total") {
-        filterOptionsDropdown.hidden = true;
-        renderResultsForWholeClass();
-    } else {
-        // filterOptionsDropdown.innerHTML = "<option value=\"\" disabled selected>Select option</option>";
-        filterOptionsDropdown.innerHTML = "";
-
-        if (filterValue === "student_id") {
-            options = getStudentIds();
-        } else if (filterValue === "question") {
-            options = getQuestions();
-        } else if (filterValue === "seat_group") {
-            options = getSeatGroups();
-        }
-
-        options.then((result) => {
-            for (var optionId in result) {
-                let option_value = filterValue + "-" + result[optionId];
-                filterOptionsDropdown.innerHTML += `<option value="${option_value}">${result[optionId]}</option>`;
+    return new Promise((resolve, reject) => {
+        const filterOptionsDropdown = document.getElementById("filter_options_dropdown");
+    
+        if (filterValue === "total") {
+            filterOptionsDropdown.hidden = true;
+            renderResultsForWholeClass();
+        } else {
+            filterOptionsDropdown.innerHTML = "<option value=\"\" disabled selected>Select option</option>";
+    
+            if (filterValue === "student_id") {
+                options = getStudentIds();
+            } else if (filterValue === "question") {
+                options = getQuestions();
+            } else if (filterValue === "seat_group") {
+                options = getSeatGroups();
             }
-        });
-        filterOptionsDropdown.hidden = false;
-    }
+    
+            options.then((result) => {
+                for (var optionId in result) {
+                    let option_value = filterValue + "-" + result[optionId];
+                    filterOptionsDropdown.innerHTML += `<option value="${option_value}">${result[optionId]}</option>`;
+                }
+                filterOptionsDropdown.hidden = false;
+                resolve();
+            });
+        }
+    });
 }
 
 function renderResultsForWholeClass() {
@@ -197,22 +193,22 @@ function renderResultsForFilter(filterOptionValue){
     }
 }
 
-function refreshResults() {
+async function refreshResults() {
     const filtersDropdownValue = document.getElementById("filters_dropdown").value;
     if (filtersDropdownValue.length === 0 || filtersDropdownValue == "total") {
         renderResults(filtersDropdownValue);
     } else {
-        const filterOptionsDropdown = document.getElementById("filter_options_dropdown");
+        var filterOptionsDropdown = document.getElementById("filter_options_dropdown");
         const existingValue = filterOptionsDropdown.value;
-        renderResults(filtersDropdownValue);
+        await renderResults(filtersDropdownValue);
 
-        for (var i = 0; i < filterOptionsDropdown.length; i++) {
+        for (var i = 0; i < filterOptionsDropdown.options.length; i++) {
             if (filterOptionsDropdown[i].value === existingValue) {
-                filterOptionsDropdown[i].selected = true;
+                filterOptionsDropdown[i].setAttribute("selected", true);
+                filterOptionsDropdown.value = existingValue;
                 break;
             }
         }
-
         renderResultsForFilter(existingValue);
     }
 }
